@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nhibernate_practice", "nhibernate_practice\nhibernate_practice.csproj", "{C1A50399-FE1C-46ED-B81B-56F81D8C389C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NH.Entity", "NH.Entity\NH.Entity.csproj", "{A6739682-B99F-4E73-BF21-C55F6FAF4A6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1A50399-FE1C-46ED-B81B-56F81D8C389C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1A50399-FE1C-46ED-B81B-56F81D8C389C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1A50399-FE1C-46ED-B81B-56F81D8C389C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1A50399-FE1C-46ED-B81B-56F81D8C389C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6739682-B99F-4E73-BF21-C55F6FAF4A6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6739682-B99F-4E73-BF21-C55F6FAF4A6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6739682-B99F-4E73-BF21-C55F6FAF4A6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6739682-B99F-4E73-BF21-C55F6FAF4A6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {78A3ABAE-67C2-4CB8-9477-228FF68B528B}
+	EndGlobalSection
+EndGlobal
