@@ -117,4 +117,8 @@ _ReSharper*/
 *.bak
 *.cache
 *.DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Application settings
+appsettings.json
+appsettings.*.json 
