@@ -3,9 +3,10 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using NH.Entity.Entities;
-using MySql.Data.MySqlClient;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
-namespace nhibernate_practice
+namespace NH.Entity.Infrastructure
 {
     public static class NHibernateHelper
     {
@@ -21,36 +22,11 @@ namespace nhibernate_practice
             return config.GetConnectionString("DefaultConnection");
         }
 
-        private static bool SchemaExists(string connectionString)
-        {
-            try
-            {
-                using (var connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open();
-                    var command = connection.CreateCommand();
-                    command.CommandText = @"
-                        SELECT COUNT(*) 
-                        FROM information_schema.tables 
-                        WHERE table_schema = 'nhibernate_test' 
-                        AND table_name IN ('Department', 'Employee')";
-                    
-                    var result = Convert.ToInt32(command.ExecuteScalar());
-                    return result == 2; // Both tables exist
-                }
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public static ISessionFactory GetSessionFactory()
         {
             if (_sessionFactory == null)
             {
                 var connectionString = GetConnectionString();
-                var schemaExists = SchemaExists(connectionString);
 
                 var configuration = Fluently.Configure()
                     .Database(MySQLConfiguration.Standard
@@ -61,9 +37,8 @@ namespace nhibernate_practice
                         .AddFromAssemblyOf<Department>())
                     .ExposeConfiguration(cfg =>
                     {
-                        // Use SchemaUpdate instead of SchemaExport
                         new SchemaUpdate(cfg)
-                            .Execute(false, true); // false = don't script, true = execute
+                            .Execute(false, true);
                     })
                     .BuildSessionFactory();
 
@@ -72,9 +47,9 @@ namespace nhibernate_practice
             return _sessionFactory;
         }
 
-        public static NHibernate.ISession OpenSession()
+        public static ISession OpenSession()
         {
             return GetSessionFactory().OpenSession();
         }
     }
-}
+} 

@@ -8,6 +8,7 @@ using NH.Entity.Interfaces;
 using NH.Entity.Services;
 using NHibernate;
 using NH.Entity.Repositories;
+using NH.Entity.Extensions;
 
 namespace nhibernate_practice
 {
@@ -43,93 +44,43 @@ namespace nhibernate_practice
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container
-            builder.Services.AddScoped<NHibernate.ISession>(provider => 
-            {
-                return NHibernateHelper.OpenSession();
-            });
-
-            // Register repositories
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-            // Register services
-            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            // Add all services through the extension method
+            builder.Services.AddNHibernateServices();
 
             var app = builder.Build();
 
-            // Example of using the services
+            // Initialize database with sample data
             using (var scope = app.Services.CreateScope())
             {
+                var dataInitService = scope.ServiceProvider.GetRequiredService<IDataInitializationService>();
+                dataInitService.InitializeDatabase();
+
+                // Query and display data using services
                 var employeeService = scope.ServiceProvider.GetRequiredService<IEmployeeService>();
                 var departmentService = scope.ServiceProvider.GetRequiredService<IDepartmentService>();
 
-                // Create sample data
-                using (var session = NHibernateHelper.OpenSession())
+                // Display all employees
+                Console.WriteLine("All Employees:");
+                var allEmployees = employeeService.GetAllEmployees();
+                foreach (var emp in allEmployees)
                 {
-                    // Truncate all tables before inserting new data
-                    TruncateAllTables(session);
-
-                    using (var transaction = session.BeginTransaction())
-                    {
-                        var itDepartment = new Department { Name = "IT" };
-                        var hrDepartment = new Department { Name = "HR" };
-
-                        var fullTimeEmployee = new FullTimeEmployee
-                        {
-                            FirstName = "John",
-                            LastName = "Doe",
-                            Salary = 50000,
-                            Department = itDepartment,
-                            VacationDays = 20,
-                            InsuranceNumber = "INS123"
-                        };
-
-                        var contractEmployee = new ContractEmployee
-                        {
-                            FirstName = "Jane",
-                            LastName = "Smith",
-                            Salary = 45000,
-                            Department = hrDepartment,
-                            ContractEndDate = DateTime.Now.AddMonths(6),
-                            HourlyRate = 25.5m
-                        };
-
-                        session.Save(itDepartment);
-                        session.Save(hrDepartment);
-                        session.Save(fullTimeEmployee);
-                        session.Save(contractEmployee);
-
-                        transaction.Commit();
-                    }
+                    Console.WriteLine($"- {emp.FirstName} {emp.LastName} ({emp.GetType().Name})");
                 }
 
-                // Query data
-                using (var session = NHibernateHelper.OpenSession())
+                // Display full-time employees
+                Console.WriteLine("\nFull-Time Employees:");
+                var fullTimeEmployees = employeeService.GetFullTimeEmployees();
+                foreach (var emp in fullTimeEmployees)
                 {
-                    // Query all employees
-                    Console.WriteLine("All Employees:");
-                    var allEmployees = session.Query<Employee>().ToList();
-                    foreach (var emp in allEmployees)
-                    {
-                        Console.WriteLine($"- {emp.FirstName} {emp.LastName} ({emp.GetType().Name})");
-                    }
+                    Console.WriteLine($"- {emp.FirstName} {emp.LastName}, Vacation Days: {emp.VacationDays}");
+                }
 
-                    // Query only full-time employees
-                    Console.WriteLine("\nFull-Time Employees:");
-                    var fullTimeEmployees = session.Query<FullTimeEmployee>().ToList();
-                    foreach (var emp in fullTimeEmployees)
-                    {
-                        Console.WriteLine($"- {emp.FirstName} {emp.LastName}, Vacation Days: {emp.VacationDays}");
-                    }
-
-                    // Query only contract employees
-                    Console.WriteLine("\nContract Employees:");
-                    var contractEmployees = session.Query<ContractEmployee>().ToList();
-                    foreach (var emp in contractEmployees)
-                    {
-                        Console.WriteLine($"- {emp.FirstName} {emp.LastName}, Hourly Rate: {emp.HourlyRate:C}");
-                    }
+                // Display contract employees
+                Console.WriteLine("\nContract Employees:");
+                var contractEmployees = employeeService.GetContractEmployees();
+                foreach (var emp in contractEmployees)
+                {
+                    Console.WriteLine($"- {emp.FirstName} {emp.LastName}, Hourly Rate: {emp.HourlyRate:C}");
                 }
             }
 
