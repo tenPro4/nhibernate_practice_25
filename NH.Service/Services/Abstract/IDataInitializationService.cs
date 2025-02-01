@@ -1,4 +1,4 @@
-namespace NH.Entity.Interfaces
+namespace NH.Service.Services.Abstract
 {
     public interface IDataInitializationService
     {

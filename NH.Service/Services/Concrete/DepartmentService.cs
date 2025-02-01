@@ -1,8 +1,8 @@
+using NH.Service.Services.Abstract;
 using NH.Entity.Entities;
-using NH.Entity.Interfaces;
-using NHibernate;
+using NH.Repo.Repositories;
 
-namespace NH.Entity.Services
+namespace NH.Service.Services.Concrete
 {
     public class DepartmentService : IDepartmentService
     {

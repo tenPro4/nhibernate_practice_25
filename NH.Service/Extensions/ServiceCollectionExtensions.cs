@@ -1,22 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
-using NH.Entity.Infrastructure;
-using NH.Entity.Interfaces;
-using NH.Entity.Repositories;
 using System.Reflection;
 
-namespace NH.Entity.Extensions
+namespace NH.Service.Extensions
 {
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddNHibernateServices(this IServiceCollection services)
         {
-            // Register NHibernate session
-            services.AddScoped<NHibernate.ISession>(provider => 
-                NHibernateHelper.OpenSession());
-
-            // Register generic repository
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
             // Auto-register all services
             var assembly = Assembly.GetExecutingAssembly();
             

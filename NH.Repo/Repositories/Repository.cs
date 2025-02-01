@@ -1,9 +1,8 @@
-using NH.Entity.Interfaces;
 using NHibernate;
 using NHibernate.Linq;
 using System.Linq.Expressions;
 
-namespace NH.Entity.Repositories
+namespace NH.Repo.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

@@ -1,52 +1,18 @@
-using System;
-using NHibernate.Linq;
-using System.Linq;
-using NH.Entity.Entities;
-using NHibernate.Transform;
-using Microsoft.Extensions.DependencyInjection;
-using NH.Entity.Interfaces;
-using NH.Entity.Services;
-using NHibernate;
-using NH.Entity.Repositories;
-using NH.Entity.Extensions;
+using NH.Repo.Extensions;
+using NH.Service.Extensions;
+using NH.Service.Services.Abstract;
 
 namespace nhibernate_practice
 {
     class Program
     {
-        static void TruncateAllTables(NHibernate.ISession session)
-        {
-            using (var transaction = session.BeginTransaction())
-            {
-                try
-                {
-                    // Disable foreign key checks
-                    session.CreateSQLQuery("SET FOREIGN_KEY_CHECKS = 0").ExecuteUpdate();
-
-                    // Truncate tables
-                    session.CreateSQLQuery("TRUNCATE TABLE Employee").ExecuteUpdate();
-                    session.CreateSQLQuery("TRUNCATE TABLE Department").ExecuteUpdate();
-
-                    // Re-enable foreign key checks
-                    session.CreateSQLQuery("SET FOREIGN_KEY_CHECKS = 1").ExecuteUpdate();
-
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-
         static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add all services through the extension method
+            builder.Services.LoadRepositoryLayerExtensions();
             builder.Services.AddNHibernateServices();
-
             var app = builder.Build();
 
             // Initialize database with sample data

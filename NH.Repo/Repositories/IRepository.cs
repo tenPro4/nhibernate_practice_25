@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace NH.Entity.Interfaces
+namespace NH.Repo.Repositories
 {
     public interface IRepository<T> where T : class
     {
